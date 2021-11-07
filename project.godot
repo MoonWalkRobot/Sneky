@@ -11,11 +11,13 @@ config_version=4
 [application]
 
 config/name="Sneky"
+run/main_scene="res://scenes/MainMenu/MainMenu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 ControlConverter="*res://scenes/Singletons/ControlConverter.cs"
+InputVisualizer="*res://scenes/InputVisualizer/InputVisualizer.tscn"
 
 [physics]
 
