@@ -31,7 +31,9 @@ public class InputChecker : Node
             Input.ParseInputEvent(a);
             _timeoutUnpress = true;
             _wait();
-        } else if (Math.Abs(_controlConverter.speed.y) > _threshold) {
+        }
+        else if (Math.Abs(_controlConverter.speed.y) > _threshold)
+        {
             EmitSignal(nameof(Select));
             _wait();
         }
@@ -46,7 +48,8 @@ public class InputChecker : Node
     private void _onTimerTimeout()
     {
         _doProcess = true;
-        if (_timeoutUnpress) {
+        if (_timeoutUnpress)
+        {
             var a = new InputEventAction();
             a.Action = "ui_accept";
             a.Pressed = false;

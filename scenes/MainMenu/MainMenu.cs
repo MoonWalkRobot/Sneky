@@ -25,8 +25,8 @@ public class MainMenu : Control
 
     private void _onButtonSettingsPressed()
     {
-        GD.Print("Settings menu");
-        //Settings menu stuff.
+        GetParent().AddChild(ResourceLoader.Load<PackedScene>("res://scenes/SettingsMenu/SettingsMenu.tscn").Instance());
+        QueueFree();
     }
 
     private void _onButtonQuitPressed()
