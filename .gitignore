@@ -1,2 +1,5 @@
 .mono/
 .import/
+Godot*
+nohup.out
+mono_crash*

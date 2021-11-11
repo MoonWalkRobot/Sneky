@@ -16,8 +16,13 @@ config/icon="res://icon.png"
 
 [autoload]
 
+Globals="*res://scenes/Singletons/Globals.cs"
 ControlConverter="*res://scenes/Singletons/ControlConverter.cs"
 InputVisualizer="*res://scenes/InputVisualizer/InputVisualizer.tscn"
+
+[global]
+
+Edito=false
 
 [physics]
 
