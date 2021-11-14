@@ -5,7 +5,7 @@ public class Body : Node2D
 {
     public class Transition
     {
-        Transition(Vector2 position_, float angle_)
+        public Transition(Vector2 position_, float angle_)
         {
             position = position_;
             angle = angle_;
