@@ -13,8 +13,7 @@ public class Body : Node2D
         public Vector2 position;
         public float angle;
     }
-
-    public List<Transition> Transitions = new List<Transition>();
+    public Queue<Transition> Transitions = new Queue<Transition>();
     private Tween _tween;
     private Timer _timer;
     public Body NextBody;
@@ -37,12 +36,12 @@ public class Body : Node2D
     {
         if (Transitions.Count >= 10)
         {
-            Transition transition = Transitions[0];
+            Transition transition = Transitions.Dequeue();
             _tween.InterpolateProperty(this, "position", Position, transition.position, 0.1f);
             _tween.InterpolateProperty(this, "rotation_degrees", RotationDegrees, transition.angle, 0.1f);
             _tween.Start();
             if (NextBody != null) {
-                NextBody.Transitions.Add(transition);
+                NextBody.Transitions.Enqueue(transition);
             }
         }
     }
