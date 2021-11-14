@@ -22,7 +22,7 @@ public class Head : Node2D
         timer.OneShot = false;
         timer.Start(2);
         firstBody = queueScene.Instance<Body>();
-        CallDeferred("add_child", firstBody);
+        GetParent().CallDeferred("add_child", firstBody);
     }
 
     public void Move(float delta)

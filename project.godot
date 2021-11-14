@@ -20,13 +20,14 @@ Globals="*res://scenes/Singletons/Globals.cs"
 ControlConverter="*res://scenes/Singletons/ControlConverter.cs"
 InputVisualizer="*res://scenes/InputVisualizer/InputVisualizer.tscn"
 
-[global]
-
-Edito=false
 [display]
 
 window/size/width=800
 window/size/height=800
+
+[global]
+
+Edito=false
 
 [input]
 
