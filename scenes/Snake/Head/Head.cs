@@ -3,26 +3,24 @@ using System;
 
 public class Head : Node2D
 {
-    // Declare member variables here. Examples:
-    // private int a = 2;
-    // private string b = "text";
-    private Vector2 speed = new Vector2(0, -40);
+    private Vector2 speed = new Vector2(0, -85);
     private float rotationSpeed = 120;
     private ControlConverter controlConverter;
     private Body firstBody;
     private PackedScene queueScene = ResourceLoader.Load<PackedScene>("res://scenes/Snake/Body/Body.tscn");
     private Timer timer;
 
-    // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         controlConverter = GetNode<ControlConverter>("/root/ControlConverter");
         timer = GetNode<Timer>("Timer");
         timer.Connect("timeout", this, "_on_Timer_timeout");
         timer.OneShot = false;
-        timer.Start(2);
+        timer.Start(0.1f);
         firstBody = queueScene.Instance<Body>();
+        firstBody.GetNode("Area2D").QueueFree();
         GetParent().CallDeferred("add_child", firstBody);
+        GetNode<Area2D>("Area2D").Connect("area_entered", this, nameof(onArea2DEntered));
     }
 
     public void Move(float delta)
@@ -45,15 +43,18 @@ public class Head : Node2D
     }
 
     private void _on_Timer_timeout() {
-        GD.Print("FDP");
-        AddBody();
         firstBody.Transitions.Enqueue(new Body.Transition(Position, RotationDegrees));
     }
 
-    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
         RotationDegrees += rotationSpeed * controlConverter.speed.y * delta;
         Move(delta);
+    }
+
+    private void onArea2DEntered(Area2D area)
+    {
+        GD.Print("Collided with " + area.GetParent().Name);
+        // TODO DEAD
     }
 }
