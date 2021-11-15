@@ -1,20 +1,13 @@
 using Godot;
 using System;
 
-public class Snake : Node
+public class Snake : Node2D
 {
     private Head head;
 
     public override void _Ready()
     {
         head = GetNode<Head>("Head");
-        head.AddBody();
-        head.AddBody();
-        head.AddBody();
-        head.AddBody();
-        head.AddBody();
-        head.AddBody();
-        head.AddBody();
     }
 
 }

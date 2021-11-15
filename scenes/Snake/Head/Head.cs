@@ -33,7 +33,7 @@ public class Head : Node2D
         while(true) {
             if (nextBody.NextBody == null) {
                 Body newBody = queueScene.Instance<Body>();
-                GetParent().AddChild(newBody);
+                GetParent().CallDeferred("add_child", newBody);
                 nextBody.NextBody = newBody;
                 return;
             } else {
@@ -55,6 +55,10 @@ public class Head : Node2D
     private void onArea2DEntered(Area2D area)
     {
         GD.Print("Collided with " + area.GetParent().Name);
+        if (area.GetParent() is Food) {
+            area.GetParent<Food>().CallDeferred(nameof(Food.Die));
+            CallDeferred(nameof(AddBody));
+        }
         // TODO DEAD
     }
 }
