@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/MainGame/MainGame.cs" type="Script" id=3]
+
+[node name="MainGame" type="Node2D"]
+scale = Vector2( 1, 1.0043 )
+script = ExtResource( 3 )
