@@ -25,24 +25,31 @@ public class Head : Node2D
 
     public void Move(float delta)
     {
-        Position += speed.Rotated(((float) Math.PI) * RotationDegrees / 180) * delta;
+        Position += speed.Rotated(((float)Math.PI) * RotationDegrees / 180) * delta;
     }
 
-    public void AddBody() {
+    public void AddBody()
+    {
         Body nextBody = firstBody;
-        while(true) {
-            if (nextBody.NextBody == null) {
+        while (true)
+        {
+            if (nextBody.NextBody == null)
+            {
                 Body newBody = queueScene.Instance<Body>();
+                newBody.Position = nextBody.Position;
                 GetParent().CallDeferred("add_child", newBody);
                 nextBody.NextBody = newBody;
                 return;
-            } else {
+            }
+            else
+            {
                 nextBody = nextBody.NextBody;
             }
         }
     }
 
-    private void _on_Timer_timeout() {
+    private void _on_Timer_timeout()
+    {
         firstBody.Transitions.Enqueue(new Body.Transition(Position, RotationDegrees));
     }
 
@@ -54,11 +61,13 @@ public class Head : Node2D
 
     private void onArea2DEntered(Area2D area)
     {
-        GD.Print("Collided with " + area.GetParent().Name);
-        if (area.GetParent() is Food) {
+        if (area.GetParent() is Food)
+        {
             area.GetParent<Food>().CallDeferred(nameof(Food.Die));
-            CallDeferred(nameof(AddBody));
         }
-        // TODO DEAD
+        else if (area.GetParent() is Bomb)
+        {
+            area.GetParent<Bomb>().CallDeferred(nameof(Bomb.Die));
+        }
     }
 }
