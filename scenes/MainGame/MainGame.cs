@@ -3,38 +3,57 @@ using System;
 
 public class MainGame : Node2D
 {
-    // Declare member variables here. Examples:
-    // private int a = 2;
-    // private string b = "text";
-    RandomNumberGenerator rng = new RandomNumberGenerator();
-    PackedScene foodScene = ResourceLoader.Load<PackedScene>("res://scenes/Food/Food.tscn");
+    private RandomNumberGenerator rng = new RandomNumberGenerator();
+    private PackedScene foodScene = ResourceLoader.Load<PackedScene>("res://scenes/Food/Food.tscn");
+    private PackedScene bombScene = ResourceLoader.Load<PackedScene>("res://scenes/Bomb/Bomb.tscn");
+    private Snake snake;
+    private Bomb bomb;
+    public int foodLevel = 0;
+    public const int foodLevelUp = 3;
 
-
-
-    // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        Snake snake = ResourceLoader.Load<PackedScene>("res://scenes/Snake/Snake.tscn").Instance<Snake>();
+        snake = ResourceLoader.Load<PackedScene>("res://scenes/Snake/Snake.tscn").Instance<Snake>();
         AddChild(snake);
-        snake.Position = new Vector2(400,400);
+        snake.Position = new Vector2(400, 400);
         rng.Randomize();
         CreateFood();
+        CreateBomb();
     }
 
-    private void CreateFood() {
+    private void CreateFood()
+    {
         Food food = foodScene.Instance<Food>();
-        food.Position = new Vector2(rng.Randf() * 800, rng.Randf() * 800);
+        food.Position = new Vector2(rng.Randf() * 500 + 100, rng.Randf() * 500 + 100); //TODO: FIX Generation.
         AddChild(food);
         food.Connect(nameof(Food.Dead), this, nameof(_OnFoodDead));
     }
 
-    private void _OnFoodDead() {
+    private void CreateBomb()
+    {
+        bomb = bombScene.Instance<Bomb>();
+        bomb.Position = new Vector2(rng.Randf() * 500 + 100, rng.Randf() * 500 + 100); //TODO: FIX Generation.
+        AddChild(bomb);
+        bomb.Connect(nameof(Bomb.Dead), this, nameof(_OnBombDead));
+    }
+
+    private void _OnFoodDead()
+    {
+        foodLevel++;
+        if (foodLevel == foodLevelUp)
+        {
+            foodLevel = 0;
+            snake.GetNode<Head>("Head").AddBody();
+            bomb.Die();
+        }
         CreateFood();
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
+    private void _OnBombDead()
+    {
+        snake.TakeDamage();
+        CreateBomb();
+    }
+
+
 }
