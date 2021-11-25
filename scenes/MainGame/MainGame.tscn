@@ -5,3 +5,5 @@
 [node name="MainGame" type="Node2D"]
 scale = Vector2( 1, 1.0043 )
 script = ExtResource( 3 )
+
+[node name="MapElements" type="YSort" parent="."]

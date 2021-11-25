@@ -18,8 +18,10 @@ public class Head : Node2D
         timer.OneShot = false;
         timer.Start(0.1f);
         firstBody = queueScene.Instance<Body>();
+        firstBody.Position = Position;
         firstBody.GetNode("Area2D").QueueFree();
         GetParent().CallDeferred("add_child", firstBody);
+        GetParent().CallDeferred("move_child", firstBody, 0);
         GetNode<Area2D>("Area2D").Connect("area_entered", this, nameof(onArea2DEntered));
     }
 
@@ -37,7 +39,9 @@ public class Head : Node2D
             {
                 Body newBody = queueScene.Instance<Body>();
                 newBody.Position = nextBody.Position;
+                newBody.RotationDegrees = nextBody.RotationDegrees;
                 GetParent().CallDeferred("add_child", newBody);
+                GetParent().CallDeferred("move_child", newBody, 0);
                 nextBody.NextBody = newBody;
                 return;
             }
@@ -61,13 +65,19 @@ public class Head : Node2D
 
     private void onArea2DEntered(Area2D area)
     {
-        if (area.GetParent() is Food)
+        Node parent = area.GetParent();
+        if (parent is Food)
         {
-            area.GetParent<Food>().CallDeferred(nameof(Food.Die));
+            ((Food)parent).CallDeferred(nameof(Food.Die));
         }
-        else if (area.GetParent() is Bomb)
+        else if (parent is Bomb)
         {
-            area.GetParent<Bomb>().CallDeferred(nameof(Bomb.Die));
+            ((Bomb)parent).CallDeferred(nameof(Bomb.Die));
+            GetParent<Snake>().TakeDamage();
+        } 
+        else if (parent is Body)
+        {
+            GetParent<Snake>().TakeDamage();
         }
     }
 }

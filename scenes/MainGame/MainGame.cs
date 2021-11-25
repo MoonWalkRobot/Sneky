@@ -8,11 +8,13 @@ public class MainGame : Node2D
     private PackedScene bombScene = ResourceLoader.Load<PackedScene>("res://scenes/Bomb/Bomb.tscn");
     private Snake snake;
     private Bomb bomb;
-    public int foodLevel = 0;
-    public const int foodLevelUp = 3;
+    private YSort mapElements;
+    public int FoodLevel = 0;
+    public const int FoodLevelUp = 3;
 
     public override void _Ready()
     {
+        mapElements = GetNode<YSort>("MapElements");
         snake = ResourceLoader.Load<PackedScene>("res://scenes/Snake/Snake.tscn").Instance<Snake>();
         AddChild(snake);
         snake.Position = new Vector2(400, 400);
@@ -25,7 +27,7 @@ public class MainGame : Node2D
     {
         Food food = foodScene.Instance<Food>();
         food.Position = new Vector2(rng.Randf() * 500 + 100, rng.Randf() * 500 + 100); //TODO: FIX Generation.
-        AddChild(food);
+        mapElements.AddChild(food);
         food.Connect(nameof(Food.Dead), this, nameof(_OnFoodDead));
     }
 
@@ -33,16 +35,16 @@ public class MainGame : Node2D
     {
         bomb = bombScene.Instance<Bomb>();
         bomb.Position = new Vector2(rng.Randf() * 500 + 100, rng.Randf() * 500 + 100); //TODO: FIX Generation.
-        AddChild(bomb);
+        mapElements.AddChild(bomb);
         bomb.Connect(nameof(Bomb.Dead), this, nameof(_OnBombDead));
     }
 
     private void _OnFoodDead()
     {
-        foodLevel++;
-        if (foodLevel == foodLevelUp)
+        FoodLevel++;
+        if (FoodLevel == FoodLevelUp)
         {
-            foodLevel = 0;
+            FoodLevel = 0;
             snake.GetNode<Head>("Head").AddBody();
             bomb.Die();
         }
@@ -51,7 +53,6 @@ public class MainGame : Node2D
 
     private void _OnBombDead()
     {
-        snake.TakeDamage();
         CreateBomb();
     }
 
