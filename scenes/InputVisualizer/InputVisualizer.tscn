@@ -2,12 +2,8 @@
 
 [ext_resource path="res://scenes/InputVisualizer/InputVis.cs" type="Script" id=1]
 
-[node name="InputVisualizer" type="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="InputVisualizer" type="CanvasLayer"]
+layer = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchor_top = 1.0
@@ -21,7 +17,7 @@ __meta__ = {
 }
 
 [node name="InputVis" type="ProgressBar" parent="HBoxContainer"]
-margin_right = 1024.0
+margin_right = 1600.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
