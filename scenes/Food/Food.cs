@@ -3,15 +3,15 @@ using System;
 
 public class Food : Node2D
 {
-    [Signal] public delegate void Dead();
+	[Signal] public delegate void Dead();
 
-    public override void _Ready()
-    {
-        
-    }
+	public override void _Ready()
+	{
+		
+	}
 
-    public void Die() {
-        EmitSignal(nameof(Dead));
-        QueueFree();
-    }
+	public void Die() {
+		EmitSignal(nameof(Dead));
+		QueueFree();
+	}
 }
