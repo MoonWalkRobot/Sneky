@@ -3,20 +3,24 @@ using System;
 
 public class Head : Node2D
 {
-    private Vector2 speed = new Vector2(0, -85);
+    private const float OriginalSpeed = 85;
+    private Vector2 speed = new Vector2(0, -OriginalSpeed);
     private float rotationSpeed = 120;
     private ControlConverter controlConverter;
     private Body firstBody;
     private PackedScene queueScene = ResourceLoader.Load<PackedScene>("res://scenes/Snake/Body/Body.tscn");
     private Timer timer;
-
+    public float SnakeSpeed = OriginalSpeed;
+    public const float SpeedRatio = 1f / 85f;
+    public const float TransitionCount = 10;
+    public float TransitionTime = 1 / (OriginalSpeed * SpeedRatio); // TODO: Not forget to update this when changing snake speed.
     public override void _Ready()
     {
         controlConverter = GetNode<ControlConverter>("/root/ControlConverter");
         timer = GetNode<Timer>("Timer");
         timer.Connect("timeout", this, "_on_Timer_timeout");
         timer.OneShot = false;
-        timer.Start(0.1f);
+        timer.Start(TransitionTime / TransitionCount); // TODO: Not forget to update this when changing snake speed.
         firstBody = queueScene.Instance<Body>();
         firstBody.Position = Position;
         firstBody.GetNode("Area2D").QueueFree();
