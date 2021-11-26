@@ -19,8 +19,8 @@ public class MainMenu : Control
 
 	private void _onButtonPlayPressed()
 	{
-		GD.Print("Play scene");
-		//Play Scene.
+		GetParent().AddChild(ResourceLoader.Load<PackedScene>("res://scenes/MainGame/MainGame.tscn").Instance());
+		QueueFree();
 	}
 
 	private void _onButtonSettingsPressed()
