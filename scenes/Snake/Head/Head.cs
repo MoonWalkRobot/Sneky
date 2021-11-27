@@ -83,5 +83,8 @@ public class Head : Node2D
 		{
 			GetParent<Snake>().TakeDamage();
 		}
+		else if (parent is Fauna) {
+			((Fauna) parent).CallDeferred(nameof(Fauna.React));
+		}
 	}
 }
