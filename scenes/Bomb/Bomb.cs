@@ -13,7 +13,12 @@ public class Bomb : Node2D
     }
 
 	public void Die() {
-		EmitSignal(nameof(Dead));
-		QueueFree();
+        animatedSprite.Connect("animation_finished", this, nameof(_OnDying));
+        animatedSprite.Play("Apparition", true);
 	}
+
+    public void _OnDying() {
+        EmitSignal(nameof(Dead));
+		QueueFree();
+    }
 }
