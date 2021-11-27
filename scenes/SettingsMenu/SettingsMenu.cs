@@ -16,6 +16,10 @@ public class SettingsMenu : Control
 		_buttonList.GetNode<Button>("ThresholdContainer/Threshold").Connect("pressed", this, "_onButtonThresholdPressed");
 		_buttonList.GetNode<Button>("InvertControlContainer/InvertControl").Connect("pressed", this, "_onButtonInvertControlPressed");
 		_buttonList.GetNode<Button>("Back").Connect("pressed", this, "_onButtonBackPressed");
+
+		if (_globals.EnableShaders) {
+			AddChild(ResourceLoader.Load<PackedScene>("res://scenes/Shader/Shader.tscn").Instance());
+		}
 	}
 
 	private void _onButtonThresholdPressed()

@@ -12,8 +12,8 @@ public class Bomb : Node2D
         animatedSprite.Play("Apparition");
     }
 
-    public void Die() {
-        EmitSignal(nameof(Dead));
-        QueueFree();
-    }
+	public void Die() {
+		EmitSignal(nameof(Dead));
+		QueueFree();
+	}
 }

@@ -9,6 +9,7 @@ public class InputVis : Godot.ProgressBar
     public override void _Ready()
     {
         _controlConverter = GetNode<ControlConverter>("/root/ControlConverter");
+        Set("z", 0);
     }
     public override void _Process(float delta) 
     { 

@@ -4,6 +4,7 @@
 [ext_resource path="res://scenes/Snake/Snake.cs" type="Script" id=2]
 
 [node name="Snake" type="Node2D"]
+use_parent_material = true
 script = ExtResource( 2 )
 
 [node name="Head" parent="." instance=ExtResource( 1 )]
