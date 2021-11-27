@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Head.png-cd1262cc5e00172719c4a66b1d75c9f9.stex"
+path="res://.import/Crab_dive_sheet.png-9d66401dad3c5782f6ad4507461275cd.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scenes/Snake/Head/Head.png"
-dest_files=[ "res://.import/Head.png-cd1262cc5e00172719c4a66b1d75c9f9.stex" ]
+source_file="res://scenes/Fauna/Crab_dive_sheet.png"
+dest_files=[ "res://.import/Crab_dive_sheet.png-9d66401dad3c5782f6ad4507461275cd.stex" ]
 
 [params]
 
