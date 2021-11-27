@@ -27,10 +27,10 @@ __meta__ = {
 }
 
 [node name="ButtonList" type="VBoxContainer" parent="CenterContainer"]
-margin_left = 440.0
-margin_top = 210.0
-margin_right = 840.0
-margin_bottom = 510.0
+margin_left = 600.0
+margin_top = 300.0
+margin_right = 1000.0
+margin_bottom = 600.0
 rect_min_size = Vector2( 400, 300 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
