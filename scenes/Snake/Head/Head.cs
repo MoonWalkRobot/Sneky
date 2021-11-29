@@ -3,9 +3,9 @@ using System;
 
 public class Head : Node2D
 {
-	private const float OriginalSpeed = 85;
+	private const float OriginalSpeed = 200; //85
 	private Vector2 speed = new Vector2(0, -OriginalSpeed);
-	private float rotationSpeed = 120;
+	private float rotationSpeed = 300; //120
 	private ControlConverter controlConverter;
 	private Body firstBody;
 	private PackedScene queueScene = ResourceLoader.Load<PackedScene>("res://scenes/Snake/Body/Body.tscn");
