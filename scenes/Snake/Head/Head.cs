@@ -34,7 +34,7 @@ public class Head : Node2D
 		Position += speed.Rotated(((float)Math.PI) * RotationDegrees / 180) * delta;
 	}
 
-	public void AddBody()
+	public void AddBody(bool alt=false)
 	{
 		Body nextBody = firstBody;
 		while (true)
@@ -42,6 +42,10 @@ public class Head : Node2D
 			if (nextBody.NextBody == null)
 			{
 				Body newBody = queueScene.Instance<Body>();
+				if (alt) {
+					newBody.GetNode<Sprite>("Sprite").Visible = false;
+					newBody.GetNode<Sprite>("AltSprite").Visible = true;
+				}
 				newBody.Position = nextBody.Position;
 				newBody.RotationDegrees = nextBody.RotationDegrees;
 				GetParent().CallDeferred("add_child", newBody);

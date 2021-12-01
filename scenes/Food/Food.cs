@@ -3,28 +3,28 @@ using System;
 
 public class Food : Node2D
 {
-    [Signal] public delegate void Dead();
-    private AnimatedSprite animatedSprite;
-    Random rnd = new Random();
-
-    private const int FamilySize = 4;
-    enum Octopus {
+    public enum Octopus
+    {
         basic,
         shiny,
         makeup,
         old
     }
-
+    [Signal] public delegate void Dead(bool alt);
+    private AnimatedSprite animatedSprite;
+    private Random rnd = new Random();
+    public Octopus Type;
 
     public override void _Ready()
     {
+        Type = (Octopus)rnd.Next(Enum.GetNames(typeof(Octopus)).Length);
         animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
-        animatedSprite.Play("idle_" + (Octopus) rnd.Next(FamilySize));
+        animatedSprite.Play("idle_" + Type);
     }
 
     public void Die()
     {
-        EmitSignal(nameof(Dead));
+        EmitSignal(nameof(Dead), (Type == Octopus.shiny));
         QueueFree();
     }
 }

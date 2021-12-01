@@ -7,19 +7,23 @@ public class MainGame : Node2D
     private PackedScene foodScene = ResourceLoader.Load<PackedScene>("res://scenes/Food/Food.tscn");
     private PackedScene bombScene = ResourceLoader.Load<PackedScene>("res://scenes/Bomb/Bomb.tscn");
     private PackedScene faunaScene = ResourceLoader.Load<PackedScene>("res://scenes/Fauna/Fauna.tscn");
-
-    private Node2D locationFinderHelper;
+    private Globals globals;
     private Snake snake;
     private Bomb bomb;
     private YSort mapElements;
     public int FoodLevel = 0;
+    public int HP = 1;
     public const int FoodLevelUp = 3;
 
     public override void _Ready()
     {
         mapElements = GetNode<YSort>("MapElements");
         snake = ResourceLoader.Load<PackedScene>("res://scenes/Snake/Snake.tscn").Instance<Snake>();
-        locationFinderHelper = GetNode<Node2D>("LocationFinderHelper");
+        globals = GetNode<Globals>("/root/Globals");
+        if (globals.EnableShaders)
+        {
+            AddChild(ResourceLoader.Load<PackedScene>("res://scenes/Shader/Shader.tscn").Instance());
+        }
         AddChild(snake);
         snake.Position = new Vector2(400, 400);
         rng.Randomize();
@@ -50,14 +54,21 @@ public class MainGame : Node2D
         mapElements.AddChild(fauna);
     }
 
-    private void _OnFoodDead()
+    private void _OnFoodDead(bool alt)
     {
-        FoodLevel++;
-        if (FoodLevel == FoodLevelUp)
+        if (alt)
         {
-            FoodLevel = 0;
-            snake.GetNode<Head>("Head").AddBody();
-            //bomb.Die();
+            snake.GetNode<Head>("Head").AddBody(alt);
+            HP++;
+        }
+        else
+        {
+            FoodLevel++;
+            if (FoodLevel == FoodLevelUp)
+            {
+                FoodLevel = 0;
+                snake.GetNode<Head>("Head").AddBody(alt);
+            }
         }
         CreateFood();
     }
@@ -71,11 +82,11 @@ public class MainGame : Node2D
     private async Task<bool> isPositionSpawnable(Vector2 v)
     {
         bool res = true;
-        Node2D _locationFinderHelper = ResourceLoader.Load<PackedScene>("res://scenes/MainGame/LocationFinderHelper.tscn").Instance<Node2D>();
-        AddChild(_locationFinderHelper);
-        _locationFinderHelper.Position = v;
-		await ToSignal(GetTree(), "physics_frame");
-        Godot.Collections.Array a = _locationFinderHelper.GetNode<Area2D>("Area2D").GetOverlappingAreas();
+        Node2D locationFinderHelper = ResourceLoader.Load<PackedScene>("res://scenes/MainGame/LocationFinderHelper.tscn").Instance<Node2D>();
+        AddChild(locationFinderHelper);
+        locationFinderHelper.Position = v;
+        await ToSignal(GetTree(), "physics_frame");
+        Godot.Collections.Array a = locationFinderHelper.GetNode<Area2D>("Area2D").GetOverlappingAreas();
         foreach (Area2D area in a)
         {
             Node2D node = area.GetParent<Node2D>();
@@ -84,8 +95,7 @@ public class MainGame : Node2D
                 res = false;
             }
         }
-        _locationFinderHelper.QueueFree();
-        //locationFinderHelper.Position = new Vector2(0, 0);
+        locationFinderHelper.QueueFree();
         return res;
     }
 
@@ -99,11 +109,11 @@ public class MainGame : Node2D
     private async Task<Vector2> findSpawnLocation()
     {
         Vector2 res;
-		res = generateLocation();
-		while (! await isPositionSpawnable(res))
-		{
-			res = generateLocation();
-		}
+        res = generateLocation();
+        while (!await isPositionSpawnable(res))
+        {
+            res = generateLocation();
+        }
         return res;
     }
 
