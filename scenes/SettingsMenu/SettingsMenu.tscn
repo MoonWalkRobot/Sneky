@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scenes/MainMenu/InputChecker.cs" type="Script" id=1]
 [ext_resource path="res://scenes/SettingsMenu/SettingInvertControlLabel.cs" type="Script" id=2]
 [ext_resource path="res://scenes/SettingsMenu/SettingsMenu.cs" type="Script" id=3]
 [ext_resource path="res://scenes/SettingsMenu/SettingsThresholdLabel.cs" type="Script" id=4]
 [ext_resource path="res://scenes/SettingsMenu/SettingsButtonList.cs" type="Script" id=5]
+[ext_resource path="res://scenes/SettingsMenu/SettingsEnableShadersLabel.cs" type="Script" id=6]
 
 [node name="SettingsMenu" type="Control"]
 anchor_right = 1.0
@@ -29,10 +30,10 @@ __meta__ = {
 }
 
 [node name="SettingsButtonList" type="VBoxContainer" parent="CenterContainer"]
-margin_left = 312.0
-margin_top = 150.0
-margin_right = 712.0
-margin_bottom = 450.0
+margin_left = 600.0
+margin_top = 300.0
+margin_right = 1000.0
+margin_bottom = 600.0
 rect_min_size = Vector2( 400, 300 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -40,7 +41,7 @@ script = ExtResource( 5 )
 
 [node name="ThresholdContainer" type="HBoxContainer" parent="CenterContainer/SettingsButtonList"]
 margin_right = 400.0
-margin_bottom = 97.0
+margin_bottom = 72.0
 size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
@@ -48,46 +49,72 @@ __meta__ = {
 
 [node name="Threshold" type="Button" parent="CenterContainer/SettingsButtonList/ThresholdContainer"]
 margin_right = 296.0
-margin_bottom = 97.0
+margin_bottom = 72.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Input Threshold"
 
 [node name="SettingsThresholdLabel" type="Label" parent="CenterContainer/SettingsButtonList/ThresholdContainer"]
 margin_left = 300.0
-margin_top = 41.0
+margin_top = 29.0
 margin_right = 400.0
-margin_bottom = 55.0
+margin_bottom = 43.0
 rect_min_size = Vector2( 100, 0 )
 align = 1
 valign = 1
 script = ExtResource( 4 )
 
 [node name="InvertControlContainer" type="HBoxContainer" parent="CenterContainer/SettingsButtonList"]
-margin_top = 101.0
+margin_top = 76.0
 margin_right = 400.0
-margin_bottom = 198.0
+margin_bottom = 148.0
 size_flags_vertical = 3
 
 [node name="InvertControl" type="Button" parent="CenterContainer/SettingsButtonList/InvertControlContainer"]
 margin_right = 296.0
-margin_bottom = 97.0
+margin_bottom = 72.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Invert Control"
 
 [node name="SettingInvertControlLabel" type="Label" parent="CenterContainer/SettingsButtonList/InvertControlContainer"]
 margin_left = 300.0
-margin_top = 41.0
+margin_top = 29.0
 margin_right = 400.0
-margin_bottom = 55.0
+margin_bottom = 43.0
 rect_min_size = Vector2( 100, 0 )
 align = 1
 valign = 1
 script = ExtResource( 2 )
 
+[node name="EnableShadersContainer" type="HBoxContainer" parent="CenterContainer/SettingsButtonList"]
+margin_top = 152.0
+margin_right = 400.0
+margin_bottom = 224.0
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnableShaders" type="Button" parent="CenterContainer/SettingsButtonList/EnableShadersContainer"]
+margin_right = 296.0
+margin_bottom = 72.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Enable Shaders"
+
+[node name="SettingsEnableShadersLabel" type="Label" parent="CenterContainer/SettingsButtonList/EnableShadersContainer"]
+margin_left = 300.0
+margin_top = 29.0
+margin_right = 400.0
+margin_bottom = 43.0
+rect_min_size = Vector2( 100, 0 )
+align = 1
+valign = 1
+script = ExtResource( 6 )
+
 [node name="Back" type="Button" parent="CenterContainer/SettingsButtonList"]
-margin_top = 202.0
+margin_top = 228.0
 margin_right = 400.0
 margin_bottom = 300.0
 size_flags_horizontal = 3

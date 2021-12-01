@@ -3,36 +3,38 @@ using System;
 
 public class SettingsMenu : Control
 {
-    private InputChecker _inputChecker;
-	private SettingsButtonList _buttonList;
-	private Globals _globals;
+    private InputChecker inputChecker;
+	private SettingsButtonList buttonList;
+	private Globals globals;
 
 	public override void _Ready()
 	{
-		_globals = GetNode<Globals>("/root/Globals");
-		_inputChecker = GetNode<InputChecker>("InputChecker");
-		_buttonList = GetNode<SettingsButtonList>("CenterContainer/SettingsButtonList");
-		_inputChecker.Connect(nameof(InputChecker.Select), _buttonList, nameof(ButtonList.NextFocusGrab));
-		_buttonList.GetNode<Button>("ThresholdContainer/Threshold").Connect("pressed", this, "_onButtonThresholdPressed");
-		_buttonList.GetNode<Button>("InvertControlContainer/InvertControl").Connect("pressed", this, "_onButtonInvertControlPressed");
-		_buttonList.GetNode<Button>("Back").Connect("pressed", this, "_onButtonBackPressed");
-
-		if (_globals.EnableShaders) {
-			AddChild(ResourceLoader.Load<PackedScene>("res://scenes/Shader/Shader.tscn").Instance());
-		}
+		globals = GetNode<Globals>("/root/Globals");
+		inputChecker = GetNode<InputChecker>("InputChecker");
+		buttonList = GetNode<SettingsButtonList>("CenterContainer/SettingsButtonList");
+		inputChecker.Connect(nameof(InputChecker.Select), buttonList, nameof(ButtonList.NextFocusGrab));
+		buttonList.GetNode<Button>("ThresholdContainer/Threshold").Connect("pressed", this, nameof(onButtonThresholdPressed));
+		buttonList.GetNode<Button>("InvertControlContainer/InvertControl").Connect("pressed", this, nameof(onButtonInvertControlPressed));
+		buttonList.GetNode<Button>("EnableShadersContainer/EnableShaders").Connect("pressed", this, nameof(onButtonEnableShadersPressed));
+		buttonList.GetNode<Button>("Back").Connect("pressed", this, nameof(onButtonBackPressed));
 	}
 
-	private void _onButtonThresholdPressed()
+	private void onButtonThresholdPressed()
 	{
-		_globals.InputThreshold = 50 + (_globals.InputThreshold - 50 + 10) % 100;
+		globals.InputThreshold = 50 + (globals.InputThreshold - 50 + 10) % 100;
 	}
 
-	private void _onButtonInvertControlPressed()
+	private void onButtonInvertControlPressed()
 	{
-		_globals.InvertControl = !_globals.InvertControl;
+		globals.InvertControl = !globals.InvertControl;
 	}
 
-	private void _onButtonBackPressed()
+	private void onButtonEnableShadersPressed()
+	{
+		globals.EnableShaders = !globals.EnableShaders;
+	}
+
+	private void onButtonBackPressed()
 	{
 		GetParent().AddChild(ResourceLoader.Load<PackedScene>("res://scenes/MainMenu/MainMenu.tscn").Instance());
 		QueueFree();

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[sub_resource type="Shader" id=4]
+[sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
 
 uniform float wave_speed = 1.0; //wave loop speed
@@ -16,8 +16,8 @@ void fragment(){
 	COLOR.rgb -= 0.1;
 }"
 
-[sub_resource type="ShaderMaterial" id=5]
-shader = SubResource( 4 )
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
 shader_param/wave_speed = 1.0
 shader_param/wave_freq = 2.0
 shader_param/wave_width = 0.5
@@ -26,7 +26,7 @@ shader_param/wave_width = 0.5
 layer = 3
 
 [node name="ColorRect" type="ColorRect" parent="."]
-material = SubResource( 5 )
+material = SubResource( 2 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -73.0

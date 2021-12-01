@@ -10,6 +10,7 @@ public class SettingsButtonList : VBoxContainer
 	{
 		_buttonList.Add(GetNode<Button>("ThresholdContainer/Threshold"));
 		_buttonList.Add(GetNode<Button>("InvertControlContainer/InvertControl"));
+		_buttonList.Add(GetNode<Button>("EnableShadersContainer/EnableShaders"));
 		_buttonList.Add(GetNode<Button>("Back"));
 		_buttonList[_idx].GrabFocus();
 	}
