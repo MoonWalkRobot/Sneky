@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 
 public class MainGame : Node2D
 {
+    [Signal] public delegate void HealthUpdated(int health);
+    [Signal] public delegate void FoodLevelUpdated(float foodLevel, float foodLevelMax);
     private RandomNumberGenerator rng = new RandomNumberGenerator();
     private PackedScene foodScene = ResourceLoader.Load<PackedScene>("res://scenes/Food/Food.tscn");
     private PackedScene bombScene = ResourceLoader.Load<PackedScene>("res://scenes/Bomb/Bomb.tscn");
@@ -11,6 +13,8 @@ public class MainGame : Node2D
     private Snake snake;
     private Bomb bomb;
     private YSort mapElements;
+    private FoodBar foodBar;
+    private HealthBar healthBar;
     public int FoodLevel = 0;
     public int HP = 1;
     public const int FoodLevelUp = 3;
@@ -18,6 +22,11 @@ public class MainGame : Node2D
     public override void _Ready()
     {
         mapElements = GetNode<YSort>("MapElements");
+        foodBar = GetNode<FoodBar>("UI/VBoxContainer/FoodBar");
+        healthBar = GetNode<HealthBar>("UI/VBoxContainer/HealthBar");
+        Connect(nameof(FoodLevelUpdated), foodBar, nameof(FoodBar.UpdateFoodLevel));
+        Connect(nameof(HealthUpdated), healthBar, nameof(HealthBar.UpdateHealth));
+        EmitSignal(nameof(HealthUpdated), HP);
         snake = ResourceLoader.Load<PackedScene>("res://scenes/Snake/Snake.tscn").Instance<Snake>();
         globals = GetNode<Globals>("/root/Globals");
         if (globals.EnableShaders)
@@ -60,6 +69,7 @@ public class MainGame : Node2D
         {
             snake.GetNode<Head>("Head").AddBody(alt);
             HP++;
+            EmitSignal(nameof(HealthUpdated), HP);
         }
         else
         {
@@ -69,6 +79,7 @@ public class MainGame : Node2D
                 FoodLevel = 0;
                 snake.GetNode<Head>("Head").AddBody(alt);
             }
+            EmitSignal(nameof(FoodLevelUpdated), FoodLevel, FoodLevelUp - 1);
         }
         CreateFood();
     }
