@@ -5,6 +5,7 @@ public class MainGame : Node2D
 {
     [Signal] public delegate void HealthUpdated(int health);
     [Signal] public delegate void FoodLevelUpdated(float foodLevel, float foodLevelMax);
+    [Signal] public delegate void BombMove();
     private RandomNumberGenerator rng = new RandomNumberGenerator();
     private PackedScene foodScene = ResourceLoader.Load<PackedScene>("res://scenes/Food/Food.tscn");
     private PackedScene bombScene = ResourceLoader.Load<PackedScene>("res://scenes/Bomb/Bomb.tscn");
@@ -18,6 +19,8 @@ public class MainGame : Node2D
     public int FoodLevel = 0;
     public int HP = 1;
     public const int FoodLevelUp = 3;
+    public int EatenFood = 0;
+    public const int BombIncrease = 8; 
 
     public override void _Ready()
     {
@@ -40,6 +43,19 @@ public class MainGame : Node2D
         CreateBomb();
     }
 
+    public void TakeDamage()
+    {
+        HP--;
+        if (HP <= 0)
+        {
+            gameOver();
+        }
+        else
+        {
+            EmitSignal("HealthUpdated", HP);
+        }
+    }
+
     private async void CreateFood()
     {
         Food food = foodScene.Instance<Food>();
@@ -53,6 +69,7 @@ public class MainGame : Node2D
         Bomb bomb = bombScene.Instance<Bomb>();
         mapElements.AddChild(bomb);
         bomb.Connect(nameof(Bomb.Dead), this, nameof(_OnBombDead));
+        Connect(nameof(BombMove), bomb, nameof(Bomb.Die));
         bomb.Position = await findSpawnLocation();
     }
 
@@ -78,8 +95,14 @@ public class MainGame : Node2D
             {
                 FoodLevel = 0;
                 snake.GetNode<Head>("Head").AddBody(alt);
+                EmitSignal("BombMove");
             }
             EmitSignal(nameof(FoodLevelUpdated), FoodLevel, FoodLevelUp - 1);
+        }
+        EatenFood++;
+        if (EatenFood % BombIncrease == 0)
+        {
+            CreateBomb();
         }
         CreateFood();
     }
@@ -87,6 +110,11 @@ public class MainGame : Node2D
     private void _OnBombDead()
     {
         CreateBomb();
+    }
+
+    private void gameOver()
+    {
+        GD.Print("Perdu lol");
     }
 
     // LOCATION FINDER

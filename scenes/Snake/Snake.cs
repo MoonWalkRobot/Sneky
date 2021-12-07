@@ -13,6 +13,7 @@ public class Snake : Node2D
 	//TODO: prothèse dmg
 	public void TakeDamage()
 	{
+		GetParent<MainGame>().TakeDamage();
 	}
 
 }
