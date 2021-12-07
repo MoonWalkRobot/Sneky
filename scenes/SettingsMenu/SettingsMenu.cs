@@ -21,7 +21,7 @@ public class SettingsMenu : Control
 
 	private void onButtonThresholdPressed()
 	{
-		globals.InputThreshold = 50 + (globals.InputThreshold - 50 + 10) % 100;
+		globals.InputThreshold = 50 + (globals.InputThreshold - 50 + 10) % 60;
 	}
 
 	private void onButtonInvertControlPressed()
