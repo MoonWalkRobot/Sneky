@@ -14,7 +14,7 @@ public class Bomb : Node2D
 
 	public void Die() {
         animatedSprite.Connect("animation_finished", this, nameof(OnDying));
-        animatedSprite.Play("Apparition", true);
+        animatedSprite.Play("Despawn");
 	}
 
     public void OnDying() {
