@@ -102,9 +102,13 @@
 5/shapes = [  ]
 5/z_index = 0
 
-[node name="MainGame" type="Node2D"]
-scale = Vector2( 1, 1.0043 )
+[node name="MainGame" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="TileMap" type="TileMap" parent="."]
 use_parent_material = true

@@ -1,7 +1,7 @@
 using Godot;
 using System.Threading.Tasks;
 
-public class MainGame : Node2D
+public class MainGame : Control
 {
     [Signal] public delegate void HealthUpdated(int health);
     [Signal] public delegate void FoodLevelUpdated(float foodLevel, float foodLevelMax);
@@ -10,6 +10,7 @@ public class MainGame : Node2D
     private PackedScene foodScene = ResourceLoader.Load<PackedScene>("res://scenes/Food/Food.tscn");
     private PackedScene bombScene = ResourceLoader.Load<PackedScene>("res://scenes/Bomb/Bomb.tscn");
     private PackedScene faunaScene = ResourceLoader.Load<PackedScene>("res://scenes/Fauna/Fauna.tscn");
+    private PackedScene gameOverScene = ResourceLoader.Load<PackedScene>("res://scenes/MainGame/GameOver.tscn");
     private Globals globals;
     private Snake snake;
     private Bomb bomb;
@@ -114,7 +115,25 @@ public class MainGame : Node2D
 
     private void gameOver()
     {
-        GD.Print("Perdu lol");
+        GameOver gameOver = gameOverScene.Instance<GameOver>();
+        gameOver.Connect(nameof(GameOver.Retry), this, nameof(onGameOverRetry));
+        gameOver.Connect(nameof(GameOver.MainMenu), this, nameof(onGameOverMainMenu));
+        GetTree().Paused = true;
+        AddChild(gameOver);
+    }
+
+    private void onGameOverRetry()
+    {
+        GetTree().Paused = false;
+        GetParent().AddChild(ResourceLoader.Load<PackedScene>("res://scenes/MainGame/MainGame.tscn").Instance());
+        QueueFree();
+    }
+
+    private void onGameOverMainMenu()
+    {
+        GetTree().Paused = false;
+        GetParent().AddChild(ResourceLoader.Load<PackedScene>("res://scenes/MainMenu/MainMenu.tscn").Instance());
+        QueueFree();
     }
 
     // LOCATION FINDER

@@ -12,6 +12,7 @@ public class ControlConverter : Node
     public override void _Ready()
     {
         _globals = GetNode<Globals>("/root/Globals");
+        PauseMode = Node.PauseModeEnum.Process;
     }
 
     public override void _Process(float delta)
