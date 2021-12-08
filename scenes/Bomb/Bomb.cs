@@ -9,6 +9,8 @@ public class Bomb : Node2D
     public override void _Ready()
     {
         animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
+        animatedSprite.Connect("animation_finished", this, nameof(enableHitbox));
+        GetNode("Area2D").SetProcess(false);
         animatedSprite.Play("Apparition");
     }
 
@@ -20,5 +22,11 @@ public class Bomb : Node2D
     public void OnDying() {
         EmitSignal(nameof(Dead));
 		QueueFree();
+    }
+
+    private void enableHitbox()
+    {
+        GetNode("Area2D").SetProcess(true);
+        animatedSprite.Disconnect("animation_finished", this, nameof(enableHitbox));
     }
 }
