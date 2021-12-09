@@ -16,6 +16,7 @@ public class Food : Node2D
     private AnimatedSprite animatedSprite;
     private Random rnd = new Random();
     public Octopus Type;
+    private float duration = 600;
 
     public override void _Ready()
     {
@@ -29,8 +30,14 @@ public class Food : Node2D
         int num = rnd.Next(100);
         if (Type == Octopus.alt)
         {
-            int type = (num >= 50) ? (int)Octopus.shiny : (int)Octopus.shiny;
-            return type;
+            if (num >= 50)
+            {
+                return (int)Octopus.shiny;
+            }
+            else
+            {
+                return (int)Octopus.reverse;
+            }
         }
         else
         {
@@ -53,5 +60,14 @@ public class Food : Node2D
     {
         EmitSignal(nameof(Dead), (Type == Octopus.shiny), (Type == Octopus.reverse));
         QueueFree();
+    }
+
+    override public void _Process(float delta) {
+        if(Type == Octopus.shiny || Type == Octopus.reverse) {
+            duration = duration - 1;
+            if (duration <= 0) {
+                QueueFree();
+            }
+        }
     }
 }
