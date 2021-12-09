@@ -3,8 +3,8 @@ using System;
 
 public class Head : Node2D
 {
-	String NormalSprite = "res://scenes/Snake/Head/Snake_head1.png";
-	String ReverseSprite = "res://scenes/Snake/Head/Snake_head_reverse.png";
+    String NormalSprite = "res://scenes/Snake/Head/Snake_head1.png";
+    String ReverseSprite = "res://scenes/Snake/Head/Snake_head_reverse.png";
 
     private const float OriginalSpeed = 200; //85
     private Vector2 speed = new Vector2(0, -OriginalSpeed);
@@ -67,9 +67,16 @@ public class Head : Node2D
 
     public void ReverseRotation()
     {
-        ReverseDuration = 600;
-        rotationSpeed = -rotationSpeed;
-		GetNode<Sprite>("Sprite").Texture = ResourceLoader.Load<Texture>(ReverseSprite);
+        if (rotationSpeed < 0)
+        {
+            ReverseDuration = ReverseDuration + 600;
+        }
+        else
+        {
+            ReverseDuration = 600;
+            rotationSpeed = -rotationSpeed;
+            GetNode<Sprite>("Sprite").Texture = ResourceLoader.Load<Texture>(ReverseSprite);
+        }
     }
 
     private void _on_Timer_timeout()
@@ -85,11 +92,12 @@ public class Head : Node2D
             {
                 ReverseDuration = ReverseDuration - 1;
             }
-			else {
-				ReverseDuration = 0;
-				rotationSpeed = - rotationSpeed;
-				GetNode<Sprite>("Sprite").Texture = ResourceLoader.Load<Texture>(NormalSprite);
-			}
+            else
+            {
+                ReverseDuration = 0;
+                rotationSpeed = -rotationSpeed;
+                GetNode<Sprite>("Sprite").Texture = ResourceLoader.Load<Texture>(NormalSprite);
+            }
         }
         RotationDegrees += rotationSpeed * controlConverter.speed.y * delta;
         Move(delta);
