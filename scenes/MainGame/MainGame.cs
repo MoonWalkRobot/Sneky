@@ -92,7 +92,7 @@ public class MainGame : Control
 
     private void _OnFoodDead(bool alt, bool reverse)
     {
-        if (rng.Randf() >= 0.95)
+        if (rng.Randf() >= 0.15 && !(alt || reverse))
         {
             CreateAltFood();
         }
@@ -101,6 +101,7 @@ public class MainGame : Control
             snake.GetNode<Head>("Head").AddBody(alt);
             HP++;
             EmitSignal(nameof(HealthUpdated), HP);
+            return;
         }
         else if (reverse)
         {

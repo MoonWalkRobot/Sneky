@@ -29,14 +29,8 @@ public class Food : Node2D
         int num = rnd.Next(100);
         if (Type == Octopus.alt)
         {
-            if (num >= 50)
-            {
-                return (int)Octopus.shiny;
-            }
-            else
-            {
-                return (int)Octopus.reverse;
-            }
+            int type = (num >= 50) ? (int)Octopus.shiny : (int)Octopus.shiny;
+            return type;
         }
         else
         {
