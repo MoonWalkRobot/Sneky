@@ -74,6 +74,7 @@ public class Food : Node2D
         AnimationPlayer animpl = GetNode<AnimationPlayer>("AnimationPlayer");
         animpl.Connect("animation_finished", this, nameof(onDespawnAnimationFinished));
         animpl.Play("Despawn");
+        GetNode<Area2D>("Area2D").QueueFree();
     }
 
     private void onDespawnAnimationFinished(String animationName)
