@@ -16,13 +16,20 @@ public class Food : Node2D
     private AnimatedSprite animatedSprite;
     private Random rnd = new Random();
     public Octopus Type;
-    private float duration = 600;
 
     public override void _Ready()
     {
         Type = (Octopus)SelectOctopus();
         animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
         animatedSprite.Play("idle_" + Type);
+        if (Type == Octopus.shiny || Type == Octopus.reverse) 
+        {
+            Timer timer = new Timer();
+            AddChild(timer);
+            timer.Connect("timeout", this, nameof(onDespawnTimerFinished));
+            timer.Start(10);
+        }
+
     }
 
     private int SelectOctopus()
@@ -62,12 +69,18 @@ public class Food : Node2D
         QueueFree();
     }
 
-    override public void _Process(float delta) {
-        if(Type == Octopus.shiny || Type == Octopus.reverse) {
-            duration = duration - 1;
-            if (duration <= 0) {
-                QueueFree();
-            }
+    private void onDespawnTimerFinished()
+    {
+        AnimationPlayer animpl = GetNode<AnimationPlayer>("AnimationPlayer");
+        animpl.Connect("animation_finished", this, nameof(onDespawnAnimationFinished));
+        animpl.Play("Despawn");
+    }
+
+    private void onDespawnAnimationFinished(String animationName)
+    {
+        if (animationName == "Despawn")
+        {
+            QueueFree();
         }
     }
 }

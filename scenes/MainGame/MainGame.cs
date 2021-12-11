@@ -63,6 +63,7 @@ public class MainGame : Control
         mapElements.AddChild(food);
         food.Connect(nameof(Food.Dead), this, nameof(_OnFoodDead));
         food.Position = await findSpawnLocation();
+        food.GetNode<AnimationPlayer>("AnimationPlayer").Play("Spawn");
     }
 
     private async void CreateAltFood()
@@ -72,6 +73,7 @@ public class MainGame : Control
         mapElements.AddChild(food);
         food.Connect(nameof(Food.Dead), this, nameof(_OnFoodDead));
         food.Position = await findSpawnLocation();
+        food.GetNode<AnimationPlayer>("AnimationPlayer").Play("Spawn");
     }
 
     private async void CreateBomb()
@@ -81,6 +83,7 @@ public class MainGame : Control
         bomb.Connect(nameof(Bomb.Dead), this, nameof(_OnBombDead));
         Connect(nameof(BombMove), bomb, nameof(Bomb.Die));
         bomb.Position = await findSpawnLocation();
+        bomb.GetNode<AnimatedSprite>("AnimatedSprite").Play("Apparition");
     }
 
     private void CreateFauna()
