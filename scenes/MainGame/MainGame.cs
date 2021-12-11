@@ -21,7 +21,7 @@ public class MainGame : Control
     public int HP = 1;
     public const int FoodLevelUp = 3;
     public int EatenFood = 0;
-    public const int BombIncrease = 8; 
+    public const int BombIncrease = 8;
 
     public override void _Ready()
     {
@@ -65,6 +65,15 @@ public class MainGame : Control
         food.Position = await findSpawnLocation();
     }
 
+    private async void CreateAltFood()
+    {
+        Food food = foodScene.Instance<Food>();
+        food.Type = Food.Octopus.alt;
+        mapElements.AddChild(food);
+        food.Connect(nameof(Food.Dead), this, nameof(_OnFoodDead));
+        food.Position = await findSpawnLocation();
+    }
+
     private async void CreateBomb()
     {
         Bomb bomb = bombScene.Instance<Bomb>();
@@ -81,13 +90,23 @@ public class MainGame : Control
         mapElements.AddChild(fauna);
     }
 
-    private void _OnFoodDead(bool alt)
+    private void _OnFoodDead(bool alt, bool reverse)
     {
+        if (rng.Randf() >= 0.15 && !(alt || reverse))
+        {
+            CreateAltFood();
+        }
         if (alt)
         {
             snake.GetNode<Head>("Head").AddBody(alt);
             HP++;
             EmitSignal(nameof(HealthUpdated), HP);
+            return;
+        }
+        else if (reverse)
+        {
+            snake.GetNode<Head>("Head").ReverseRotation();
+            return;
         }
         else
         {

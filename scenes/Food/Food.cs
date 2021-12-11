@@ -8,12 +8,15 @@ public class Food : Node2D
         basic,
         makeup,
         old,
-        shiny
+        shiny,
+        reverse,
+        alt
     }
     [Signal] public delegate void Dead(bool alt);
     private AnimatedSprite animatedSprite;
     private Random rnd = new Random();
     public Octopus Type;
+    private float duration = 600;
 
     public override void _Ready()
     {
@@ -25,29 +28,46 @@ public class Food : Node2D
     private int SelectOctopus()
     {
         int num = rnd.Next(100);
-        GD.Print(num);
-        if (num >= 90)
+        if (Type == Octopus.alt)
         {
-            return Enum.GetNames(typeof(Octopus)).Length - 1;
-        }
-        else if (num >= 60)
-        {
-            return Enum.GetNames(typeof(Octopus)).Length - 2;
-        }
-        else if (num >= 30)
-        {
-            return Enum.GetNames(typeof(Octopus)).Length - 3;
+            if (num >= 50)
+            {
+                return (int)Octopus.shiny;
+            }
+            else
+            {
+                return (int)Octopus.reverse;
+            }
         }
         else
         {
-            return Enum.GetNames(typeof(Octopus)).Length - 4;
+            if (num >= 66)
+            {
+                return (int)Octopus.old;
+            }
+            else if (num >= 33)
+            {
+                return (int)Octopus.makeup;
+            }
+            else
+            {
+                return (int)Octopus.basic;
+            }
         }
-
     }
 
     public void Die()
     {
-        EmitSignal(nameof(Dead), (Type == Octopus.shiny));
+        EmitSignal(nameof(Dead), (Type == Octopus.shiny), (Type == Octopus.reverse));
         QueueFree();
+    }
+
+    override public void _Process(float delta) {
+        if(Type == Octopus.shiny || Type == Octopus.reverse) {
+            duration = duration - 1;
+            if (duration <= 0) {
+                QueueFree();
+            }
+        }
     }
 }
