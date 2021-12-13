@@ -107,10 +107,10 @@
 5/z_index = 0
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 569.997, 26.9035 )
+extents = Vector2( 551.71, 6.55151 )
 
 [sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 39.9604, 429.045 )
+extents = Vector2( 7.53807, 428.393 )
 
 [node name="MainGame" type="Control"]
 anchor_right = 1.0
@@ -166,26 +166,26 @@ script = ExtResource( 7 )
 script = ExtResource( 10 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Top"]
-position = Vector2( 805.256, -10.2866 )
+position = Vector2( 803.368, 14.2541 )
 shape = SubResource( 2 )
 
 [node name="Bottom" type="Area2D" parent="."]
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Bottom"]
-position = Vector2( 802.557, 911.396 )
+position = Vector2( 800.669, 890.631 )
 shape = SubResource( 2 )
 
 [node name="Left" type="Area2D" parent="."]
 script = ExtResource( 9 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Left"]
-position = Vector2( 193.314, 447.884 )
+position = Vector2( 234.844, 451.659 )
 shape = SubResource( 3 )
 
 [node name="Right" type="Area2D" parent="."]
 script = ExtResource( 8 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Right"]
-position = Vector2( 1412.94, 447.884 )
+position = Vector2( 1372.9, 461.098 )
 shape = SubResource( 3 )

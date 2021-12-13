@@ -125,25 +125,31 @@ public class Head : Node2D
         }
         else if (area is Border)
         {
-            BorderEffect(area);
+            // BorderEffect(area);
         }
     }
 
     private void BorderEffect(Area2D area)
     {
-        switch(area.GetType().ToString()) {
-            case "Top" :
-                GD.Print("Bottom");
-                speed.y = -speed.y;
+        switch (area.GetType().ToString())
+        {
+            case "Top":
+                GD.Print("Top");
                 break;
-            case "Bottom" :
-                GD.Print("Bottom");
-                break;
-            case "Left" :
+            case "Bottom":
                 GD.Print("Bottom");
                 break;
-            case "Right" :
-                GD.Print("Bottom");
+            case "Left":
+                GD.Print(Position);
+                Vector2 p1 = Position;
+                Vector2 p2 = Position + speed.Rotated(((float)Math.PI) * RotationDegrees / 180) * 10;
+                float tetaRad = 2 * (p1.x - p2.x) / (float)Math.Sqrt(Math.Pow(p1.x - p2.x, 2) + Math.Pow(p1.y - p2.y, 2));
+                RotationDegrees += (float)Math.Asin(Math.Sign(p2.y - p1.y) * tetaRad * (180 / (float)Math.PI));
+                GD.Print(Position);
+                GD.Print("Left : " + tetaRad);
+                break;
+            case "Right":
+                GD.Print("Right");
                 break;
         }
     }
