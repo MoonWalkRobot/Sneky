@@ -58,10 +58,11 @@ text = "Input Threshold"
 
 [node name="SettingsThresholdLabel" type="Label" parent="CenterContainer/SettingsButtonList/ThresholdContainer"]
 margin_left = 300.0
-margin_top = 29.0
+margin_top = 20.0
 margin_right = 400.0
-margin_bottom = 43.0
+margin_bottom = 52.0
 rect_min_size = Vector2( 100, 0 )
+custom_colors/font_outline_modulate = Color( 1, 1, 1, 1 )
 align = 1
 valign = 1
 script = ExtResource( 4 )
@@ -81,10 +82,11 @@ text = "Invert Control"
 
 [node name="SettingInvertControlLabel" type="Label" parent="CenterContainer/SettingsButtonList/InvertControlContainer"]
 margin_left = 300.0
-margin_top = 29.0
+margin_top = 20.0
 margin_right = 400.0
-margin_bottom = 43.0
+margin_bottom = 52.0
 rect_min_size = Vector2( 100, 0 )
+custom_colors/font_outline_modulate = Color( 1, 1, 1, 1 )
 align = 1
 valign = 1
 script = ExtResource( 2 )
@@ -107,10 +109,11 @@ text = "Enable Shaders"
 
 [node name="SettingsEnableShadersLabel" type="Label" parent="CenterContainer/SettingsButtonList/EnableShadersContainer"]
 margin_left = 300.0
-margin_top = 29.0
+margin_top = 20.0
 margin_right = 400.0
-margin_bottom = 43.0
+margin_bottom = 52.0
 rect_min_size = Vector2( 100, 0 )
+custom_colors/font_outline_modulate = Color( 1, 1, 1, 1 )
 align = 1
 valign = 1
 script = ExtResource( 6 )

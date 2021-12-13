@@ -47,6 +47,7 @@ public class MainGame : Control
     public void TakeDamage()
     {
         HP--;
+        snake.SetInvincibility(3);
         if (HP <= 0)
         {
             gameOver();

@@ -14,6 +14,9 @@ public class Head : Node2D
     private Body firstBody;
     private PackedScene queueScene = ResourceLoader.Load<PackedScene>("res://scenes/Snake/Body/Body.tscn");
     private Timer timer;
+    private Timer invincibilityTimer;
+    private AnimationPlayer animationPlayer;
+    private bool isInvincible = false;
     public float SnakeSpeed = OriginalSpeed;
     public const float SpeedRatio = 1f / 85f;
     public const float TransitionCount = 10;
@@ -25,6 +28,9 @@ public class Head : Node2D
         timer.Connect("timeout", this, "_on_Timer_timeout");
         timer.OneShot = false;
         timer.Start(TransitionTime / TransitionCount); // TODO: Not forget to update this when changing snake speed.
+        invincibilityTimer = GetNode<Timer>("InvincibilityTimer");
+        invincibilityTimer.Connect("timeout", this, nameof(onInvincibilityTimerTimeout));
+        animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
         firstBody = queueScene.Instance<Body>();
         firstBody.Position = Position;
         firstBody.GetNode("Area2D").QueueFree();
@@ -77,6 +83,20 @@ public class Head : Node2D
             rotationSpeed = -rotationSpeed;
             GetNode<Sprite>("Sprite").Texture = ResourceLoader.Load<Texture>(ReverseSprite);
         }
+    }
+
+    public void BecomeInvincible(float duration)
+    {
+        invincibilityTimer.Start(duration);
+        animationPlayer.Play("Invincible");
+        isInvincible = true;
+    }
+
+    private void onInvincibilityTimerTimeout()
+    {
+        animationPlayer.Stop();
+        Modulate = new Color("FFFFFF");
+        isInvincible = false;
     }
 
     private void _on_Timer_timeout()

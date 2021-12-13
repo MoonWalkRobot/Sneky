@@ -9,6 +9,11 @@ public class Snake : Node2D
 		head = GetNode<Head>("Head");
 	}
 
+	public void SetInvincibility(float duration) 
+	{
+		head.BecomeInvincible(duration);
+	}
+
 	//TODO: Invicibility frames.
 	//TODO: prothèse dmg
 	public void TakeDamage()
