@@ -14,6 +14,11 @@ public class Snake : Node2D
 		head.BecomeInvincible(duration);
 	}
 
+	public void PlayAnimation(string animation)
+	{
+		head.PlayAnimation(animation);
+	}
+
 	//TODO: Invicibility frames.
 	//TODO: prothèse dmg
 	public void TakeDamage()

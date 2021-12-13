@@ -18,7 +18,7 @@ public class MainGame : Control
     private FoodBar foodBar;
     private HealthBar healthBar;
     public int FoodLevel = 0;
-    public int HP = 1;
+    public int HP = 5;
     public const int FoodLevelUp = 3;
     public int EatenFood = 0;
     public const int BombIncrease = 8;
@@ -48,6 +48,7 @@ public class MainGame : Control
     {
         HP--;
         snake.SetInvincibility(3);
+        snake.PlayAnimation("Damage");
         if (HP <= 0)
         {
             gameOver();
@@ -96,6 +97,8 @@ public class MainGame : Control
 
     private void _OnFoodDead(bool alt, bool reverse)
     {
+        bool create = true;
+
         if (rng.Randf() >= 0.15 && !(alt || reverse))
         {
             CreateAltFood();
@@ -105,12 +108,12 @@ public class MainGame : Control
             snake.GetNode<Head>("Head").AddBody(alt);
             HP++;
             EmitSignal(nameof(HealthUpdated), HP);
-            return;
+            create = false;
         }
         else if (reverse)
         {
-            snake.GetNode<Head>("Head").ReverseRotation();
-            return;
+            snake.GetNode<Head>("Head").Reverse(true);
+            create = false;
         }
         else
         {
@@ -123,12 +126,19 @@ public class MainGame : Control
             }
             EmitSignal(nameof(FoodLevelUpdated), FoodLevel, FoodLevelUp - 1);
         }
+
         EatenFood++;
         if (EatenFood % BombIncrease == 0)
         {
             CreateBomb();
         }
-        CreateFood();
+
+        if (create)
+        {
+            CreateFood();
+        }
+        
+        snake.PlayAnimation("Bite");
     }
 
     private void _OnBombDead()
