@@ -123,5 +123,28 @@ public class Head : Node2D
         {
             ((Fauna)parent).CallDeferred(nameof(Fauna.React));
         }
+        else if (area is Border)
+        {
+            BorderEffect(area);
+        }
+    }
+
+    private void BorderEffect(Area2D area)
+    {
+        switch(area.GetType().ToString()) {
+            case "Top" :
+                GD.Print("Bottom");
+                speed.y = -speed.y;
+                break;
+            case "Bottom" :
+                GD.Print("Bottom");
+                break;
+            case "Left" :
+                GD.Print("Bottom");
+                break;
+            case "Right" :
+                GD.Print("Bottom");
+                break;
+        }
     }
 }

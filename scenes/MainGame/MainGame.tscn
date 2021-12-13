@@ -1,11 +1,15 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://scenes/MainGame/Tileset.png" type="Texture" id=1]
+[ext_resource path="res://scenes/MainGame/Borders/Bottom.cs" type="Script" id=2]
 [ext_resource path="res://scenes/MainGame/MainGame.cs" type="Script" id=3]
 [ext_resource path="res://scenes/MainGame/Food_bar_full.png" type="Texture" id=4]
 [ext_resource path="res://scenes/MainGame/Food_bar_base.png" type="Texture" id=5]
 [ext_resource path="res://scenes/MainGame/FoodBar.cs" type="Script" id=6]
 [ext_resource path="res://scenes/MainGame/HealthBar.cs" type="Script" id=7]
+[ext_resource path="res://scenes/MainGame/Borders/Right.cs" type="Script" id=8]
+[ext_resource path="res://scenes/MainGame/Borders/Left.cs" type="Script" id=9]
+[ext_resource path="res://scenes/MainGame/Top.cs" type="Script" id=10]
 
 [sub_resource type="TileSet" id=1]
 0/name = "Sand"
@@ -102,6 +106,12 @@
 5/shapes = [  ]
 5/z_index = 0
 
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 569.997, 26.9035 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 39.9604, 429.045 )
+
 [node name="MainGame" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -151,3 +161,31 @@ margin_bottom = 191.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 7 )
+
+[node name="Top" type="Area2D" parent="."]
+script = ExtResource( 10 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Top"]
+position = Vector2( 805.256, -10.2866 )
+shape = SubResource( 2 )
+
+[node name="Bottom" type="Area2D" parent="."]
+script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bottom"]
+position = Vector2( 802.557, 911.396 )
+shape = SubResource( 2 )
+
+[node name="Left" type="Area2D" parent="."]
+script = ExtResource( 9 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Left"]
+position = Vector2( 193.314, 447.884 )
+shape = SubResource( 3 )
+
+[node name="Right" type="Area2D" parent="."]
+script = ExtResource( 8 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Right"]
+position = Vector2( 1412.94, 447.884 )
+shape = SubResource( 3 )
