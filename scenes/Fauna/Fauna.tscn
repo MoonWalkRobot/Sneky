@@ -34,33 +34,33 @@ region = Rect2( 512, 0, 128, 128 )
 atlas = ExtResource( 3 )
 region = Rect2( 640, 0, 128, 128 )
 
-[sub_resource type="AtlasTexture" id=8]
+[sub_resource type="AtlasTexture" id=37]
 atlas = ExtResource( 2 )
-region = Rect2( 0, 0, 108, 64 )
+region = Rect2( 0, 0, 108, 108 )
 
-[sub_resource type="AtlasTexture" id=9]
+[sub_resource type="AtlasTexture" id=38]
 atlas = ExtResource( 2 )
-region = Rect2( 108, 0, 108, 64 )
+region = Rect2( 108, 0, 108, 108 )
 
-[sub_resource type="AtlasTexture" id=10]
+[sub_resource type="AtlasTexture" id=39]
 atlas = ExtResource( 2 )
-region = Rect2( 216, 0, 108, 64 )
+region = Rect2( 216, 0, 108, 108 )
 
-[sub_resource type="AtlasTexture" id=11]
+[sub_resource type="AtlasTexture" id=40]
 atlas = ExtResource( 2 )
-region = Rect2( 324, 0, 108, 64 )
+region = Rect2( 324, 0, 108, 108 )
 
-[sub_resource type="AtlasTexture" id=12]
+[sub_resource type="AtlasTexture" id=41]
 atlas = ExtResource( 2 )
-region = Rect2( 432, 0, 108, 64 )
+region = Rect2( 432, 0, 108, 108 )
 
-[sub_resource type="AtlasTexture" id=13]
+[sub_resource type="AtlasTexture" id=42]
 atlas = ExtResource( 2 )
-region = Rect2( 540, 0, 108, 64 )
+region = Rect2( 540, 0, 108, 108 )
 
-[sub_resource type="AtlasTexture" id=14]
+[sub_resource type="AtlasTexture" id=43]
 atlas = ExtResource( 2 )
-region = Rect2( 648, 0, 108, 64 )
+region = Rect2( 648, 0, 108, 108 )
 
 [sub_resource type="AtlasTexture" id=15]
 atlas = ExtResource( 5 )
@@ -153,7 +153,7 @@ animations = [ {
 "name": "idle_eyes",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 8 ), SubResource( 9 ), SubResource( 10 ), SubResource( 11 ), SubResource( 12 ), SubResource( 13 ), SubResource( 14 ) ],
+"frames": [ SubResource( 37 ), SubResource( 38 ), SubResource( 39 ), SubResource( 40 ), SubResource( 41 ), SubResource( 42 ), SubResource( 43 ) ],
 "loop": true,
 "name": "idle_clapfish",
 "speed": 5.0
@@ -185,6 +185,6 @@ shape = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 36 )
-animation = "idle_eyes"
+animation = "idle_clapfish"
 
 [node name="Tween" type="Tween" parent="."]
