@@ -151,3 +151,5 @@ margin_bottom = 191.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 7 )
+
+[node name="FishTimer" type="Timer" parent="."]
