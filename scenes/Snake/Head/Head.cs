@@ -10,6 +10,7 @@ public class Head : Node2D
     private Vector2 speed = new Vector2(0, -OriginalSpeed);
     private float ReverseDuration = 0;
     private float rotationSpeed = 300; //120
+    [Signal] public delegate void Reden();
     private ControlConverter controlConverter;
     private Body firstBody;
     private PackedScene queueScene = ResourceLoader.Load<PackedScene>("res://scenes/Snake/Body/Body.tscn");
@@ -79,6 +80,11 @@ public class Head : Node2D
         }
     }
 
+    public void _OnReversedColor()
+    {
+
+    }
+
     private void _on_Timer_timeout()
     {
         firstBody.Transitions.Enqueue(new Body.Transition(Position, RotationDegrees));
@@ -125,31 +131,30 @@ public class Head : Node2D
         }
         else if (area is Border)
         {
-            // BorderEffect(area);
+            BorderEffect(area);
         }
     }
 
     private void BorderEffect(Area2D area)
     {
+        Vector2 p1 = Position;
+        Vector2 p2 = Position + speed.Rotated(((float)Math.PI) * RotationDegrees / 180) * 10;
+        float tetaRadV = 2 * (p1.x - p2.x) / (float)Math.Sqrt(Math.Pow(p1.x - p2.x, 2) + Math.Pow(p1.y - p2.y, 2));
+        float tetaRadH = 2 * (p1.y - p2.y) / (float)Math.Sqrt(Math.Pow(p1.x - p2.x, 2) + Math.Pow(p1.y - p2.y, 2));
+
         switch (area.GetType().ToString())
         {
             case "Top":
-                GD.Print("Top");
+                RotationDegrees += (float)(Math.Sign(p2.x - p1.x) * tetaRadH * (180 / (float)Math.PI));
                 break;
             case "Bottom":
-                GD.Print("Bottom");
+                RotationDegrees += (float)(Math.Sign(p2.x - p1.x) * tetaRadH * (180 / (float)Math.PI));
                 break;
             case "Left":
-                GD.Print(Position);
-                Vector2 p1 = Position;
-                Vector2 p2 = Position + speed.Rotated(((float)Math.PI) * RotationDegrees / 180) * 10;
-                float tetaRad = 2 * (p1.x - p2.x) / (float)Math.Sqrt(Math.Pow(p1.x - p2.x, 2) + Math.Pow(p1.y - p2.y, 2));
-                RotationDegrees += (float)Math.Asin(Math.Sign(p2.y - p1.y) * tetaRad * (180 / (float)Math.PI));
-                GD.Print(Position);
-                GD.Print("Left : " + tetaRad);
+                RotationDegrees += (float)(Math.Sign(p1.y - p2.y) * tetaRadV * (180 / (float)Math.PI));
                 break;
             case "Right":
-                GD.Print("Right");
+                RotationDegrees += (float)(Math.Sign(p1.y - p2.y) * tetaRadV * (180 / (float)Math.PI));
                 break;
         }
     }
