@@ -181,7 +181,7 @@ public class Head : Node2D
         {
             animation = "Reverse" + animation;
         }
-        if (!animation.Contains("Idle"))
+        if (!animation.Contains("Idle") && !animatedSprite.IsConnected("animation_finished", this, nameof(onAnimatedSpriteAnimationFinished)))
         {
             animatedSprite.Connect("animation_finished", this, nameof(onAnimatedSpriteAnimationFinished));
         }
