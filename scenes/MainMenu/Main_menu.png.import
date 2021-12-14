@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Crab_dive_sheet.png-9d66401dad3c5782f6ad4507461275cd.stex"
+path="res://.import/Main_menu.png-75676a1b5bddf2939500b8d59d398e55.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scenes/Fauna/Crab_dive_sheet.png"
-dest_files=[ "res://.import/Crab_dive_sheet.png-9d66401dad3c5782f6ad4507461275cd.stex" ]
+source_file="res://scenes/MainMenu/Main_menu.png"
+dest_files=[ "res://.import/Main_menu.png-75676a1b5bddf2939500b8d59d398e55.stex" ]
 
 [params]
 

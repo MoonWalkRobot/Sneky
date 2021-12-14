@@ -17,14 +17,17 @@ public class MainGame : Control
     private YSort mapElements;
     private FoodBar foodBar;
     private HealthBar healthBar;
+    private Timer fishTimer;
     public int FoodLevel = 0;
-    public int HP = 1;
+    public int HP = 5;
     public const int FoodLevelUp = 3;
     public int EatenFood = 0;
     public const int BombIncrease = 8;
 
     public override void _Ready()
     {
+        Node2D fishes = new Node2D();
+        fishes.Name = "Fishes";
         mapElements = GetNode<YSort>("MapElements");
         foodBar = GetNode<FoodBar>("UI/VBoxContainer/FoodBar");
         healthBar = GetNode<HealthBar>("UI/VBoxContainer/HealthBar");
@@ -38,15 +41,24 @@ public class MainGame : Control
             AddChild(ResourceLoader.Load<PackedScene>("res://scenes/Shader/Shader.tscn").Instance());
         }
         AddChild(snake);
+        AddChild(fishes);
         snake.Position = new Vector2(400, 400);
+        fishTimer = GetNode<Timer>("FishTimer");
+        fishTimer.Connect("timeout", this, nameof(onFishTimerTimeout));
         rng.Randomize();
         CreateFood();
         CreateBomb();
+        CreateFauna(Fauna.FaunaType.clapfish);
+        CreateFauna(Fauna.FaunaType.crab);
+        CreateFauna(Fauna.FaunaType.eyes);
+        fishTimer.Start(15);
     }
 
     public void TakeDamage()
     {
         HP--;
+        snake.SetInvincibility(3);
+        snake.PlayAnimation("Damage");
         if (HP <= 0)
         {
             gameOver();
@@ -63,6 +75,7 @@ public class MainGame : Control
         mapElements.AddChild(food);
         food.Connect(nameof(Food.Dead), this, nameof(_OnFoodDead));
         food.Position = await findSpawnLocation();
+        food.GetNode<AnimationPlayer>("AnimationPlayer").Play("Spawn");
     }
 
     private async void CreateAltFood()
@@ -72,6 +85,7 @@ public class MainGame : Control
         mapElements.AddChild(food);
         food.Connect(nameof(Food.Dead), this, nameof(_OnFoodDead));
         food.Position = await findSpawnLocation();
+        food.GetNode<AnimationPlayer>("AnimationPlayer").Play("Spawn");
     }
 
     private async void CreateBomb()
@@ -81,17 +95,38 @@ public class MainGame : Control
         bomb.Connect(nameof(Bomb.Dead), this, nameof(_OnBombDead));
         Connect(nameof(BombMove), bomb, nameof(Bomb.Die));
         bomb.Position = await findSpawnLocation();
+        bomb.GetNode<AnimatedSprite>("AnimatedSprite").Play("Apparition");
     }
 
-    private void CreateFauna()
+    private void CreateFauna(Fauna.FaunaType type)
     {
         Fauna fauna = faunaScene.Instance<Fauna>();
-        fauna.Position = new Vector2(rng.Randf() * 500 + 100, rng.Randf() * 500 + 100); //TODO: FIX Generation.
-        mapElements.AddChild(fauna);
+        fauna.Type = type;
+        if (type == Fauna.FaunaType.crab)
+        {
+            fauna.Position = new Vector2(rng.Randf() * 1000 + 400, rng.Randf() * 700 + 100);
+            mapElements.AddChild(fauna);
+        }
+        else if (type == Fauna.FaunaType.clapfish || type == Fauna.FaunaType.clownfish)
+        {
+            GetNode<Node2D>("Fishes").AddChild(fauna);
+            fauna.SetupFish();
+        }
+        else if (type == Fauna.FaunaType.eyes)
+        {
+            fauna.Position = new Vector2(rng.Randf() * 200, rng.Randf() * 800);
+            if (rng.Randf() >= 0.5)
+            {
+                fauna.Position = new Vector2(fauna.Position.x + 1400, fauna.Position.y);
+            }
+            mapElements.AddChild(fauna);
+        }
     }
 
     private void _OnFoodDead(bool alt, bool reverse)
     {
+        bool create = true;
+
         if (rng.Randf() >= 0.15 && !(alt || reverse))
         {
             CreateAltFood();
@@ -101,12 +136,12 @@ public class MainGame : Control
             snake.GetNode<Head>("Head").AddBody(alt);
             HP++;
             EmitSignal(nameof(HealthUpdated), HP);
-            return;
+            create = false;
         }
         else if (reverse)
         {
-            snake.GetNode<Head>("Head").ReverseRotation();
-            return;
+            snake.GetNode<Head>("Head").Reverse(true);
+            create = false;
         }
         else
         {
@@ -119,12 +154,19 @@ public class MainGame : Control
             }
             EmitSignal(nameof(FoodLevelUpdated), FoodLevel, FoodLevelUp - 1);
         }
+
         EatenFood++;
         if (EatenFood % BombIncrease == 0)
         {
             CreateBomb();
         }
-        CreateFood();
+
+        if (create)
+        {
+            CreateFood();
+        }
+
+        snake.PlayAnimation("Bite");
     }
 
     private void _OnBombDead()
@@ -153,6 +195,13 @@ public class MainGame : Control
         GetTree().Paused = false;
         GetParent().AddChild(ResourceLoader.Load<PackedScene>("res://scenes/MainMenu/MainMenu.tscn").Instance());
         QueueFree();
+    }
+
+    private void onFishTimerTimeout()
+    {
+        float rnd = rng.Randf();
+        CreateFauna((rnd >= 0.5 ? Fauna.FaunaType.clownfish : Fauna.FaunaType.clapfish));
+        GD.Print("New Fish");
     }
 
     // LOCATION FINDER

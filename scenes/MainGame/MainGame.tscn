@@ -189,3 +189,4 @@ script = ExtResource( 8 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Right"]
 position = Vector2( 1372.9, 461.098 )
 shape = SubResource( 3 )
+[node name="FishTimer" type="Timer" parent="."]

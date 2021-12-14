@@ -8,36 +8,51 @@ public class Fauna : Node2D
     // private string b = "text";
     [Signal] public delegate void Reaction();
     private AnimatedSprite animatedSprite;
-    Random rnd = new Random();
-
+    private float angle = 0;
+    private Tween tween;
+    const float distance = 1900; // ~= screen diagonal
+    private RandomNumberGenerator rng = new RandomNumberGenerator();
     private const int FaunaSize = 4;
-    enum FaunaType {
+    public enum FaunaType {
         crab,
         eyes,
         clownfish,
         clapfish
     }
 
-    private FaunaType type;
+    public FaunaType Type;
 
-    // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        type = (FaunaType) rnd.Next(FaunaSize);
         animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
-        animatedSprite.Play("idle_" + type);
+        tween = GetNode<Tween>("Tween");
+        animatedSprite.Play("idle_" + Type);
     }
 
     public void React() {
-        if (type == FaunaType.crab) {
+        if (Type == FaunaType.crab) {
             animatedSprite.Play("dive_crab");
-            
         }
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
+    public void SetupFish()
+    {
+        Vector2 pos;
+        Vector2 tmp = new Vector2(0, -distance);
+        float angle;
+        rng.Randomize();
+        pos = new Vector2(rng.Randf() * 1600, rng.Randf() * 900);
+        angle = rng.Randf() * 360;
+        pos += tmp.Rotated(((float)Math.PI) * angle / 180);
+        angle = 360 + (angle - 180) % 360;
+        tween.InterpolateProperty(this, "position", pos, (tmp * 2).Rotated(((float)Math.PI) * angle / 180), 65);
+        RotationDegrees = angle;
+        tween.Connect("tween_completed", this, nameof(onTweenCompleted));
+        tween.Start();
+    }
+
+    private void onTweenCompleted()
+    {
+        QueueFree();
+    }
 }

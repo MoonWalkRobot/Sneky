@@ -3,9 +3,6 @@ using System;
 
 public class Head : Node2D
 {
-    String NormalSprite = "res://scenes/Snake/Head/Snake_head1.png";
-    String ReverseSprite = "res://scenes/Snake/Head/Snake_head_reverse.png";
-
     private const float OriginalSpeed = 200; //85
     private Vector2 speed = new Vector2(0, -OriginalSpeed);
     private float ReverseDuration = 0;
@@ -15,6 +12,12 @@ public class Head : Node2D
     private Body firstBody;
     private PackedScene queueScene = ResourceLoader.Load<PackedScene>("res://scenes/Snake/Body/Body.tscn");
     private Timer timer;
+    private Timer invincibilityTimer;
+    private Timer reverseTimer;
+    private AnimatedSprite animatedSprite;
+    private AnimationPlayer animationPlayer;
+    private bool isInvincible = false;
+    private bool reversed = false;
     public float SnakeSpeed = OriginalSpeed;
     public const float SpeedRatio = 1f / 85f;
     public const float TransitionCount = 10;
@@ -26,6 +29,12 @@ public class Head : Node2D
         timer.Connect("timeout", this, "_on_Timer_timeout");
         timer.OneShot = false;
         timer.Start(TransitionTime / TransitionCount); // TODO: Not forget to update this when changing snake speed.
+        invincibilityTimer = GetNode<Timer>("InvincibilityTimer");
+        invincibilityTimer.Connect("timeout", this, nameof(onInvincibilityTimerTimeout));
+        reverseTimer = GetNode<Timer>("ReverseTimer");
+        reverseTimer.Connect("timeout", this, nameof(onReverseTimerTimeout));
+        animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+        animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
         firstBody = queueScene.Instance<Body>();
         firstBody.Position = Position;
         firstBody.GetNode("Area2D").QueueFree();
@@ -66,18 +75,18 @@ public class Head : Node2D
         }
     }
 
-    public void ReverseRotation()
+    public void BecomeInvincible(float duration)
     {
-        if (rotationSpeed < 0)
-        {
-            ReverseDuration = ReverseDuration + 600;
-        }
-        else
-        {
-            ReverseDuration = 600;
-            rotationSpeed = -rotationSpeed;
-            GetNode<Sprite>("Sprite").Texture = ResourceLoader.Load<Texture>(ReverseSprite);
-        }
+        invincibilityTimer.Start(duration);
+        animationPlayer.Play("Invincible");
+        isInvincible = true;
+    }
+
+    private void onInvincibilityTimerTimeout()
+    {
+        animationPlayer.Stop();
+        Modulate = new Color("FFFFFF");
+        isInvincible = false;
     }
 
     public void _OnReversedColor()
@@ -92,19 +101,6 @@ public class Head : Node2D
 
     public override void _Process(float delta)
     {
-        if (rotationSpeed < 0)
-        {
-            if (ReverseDuration > 0)
-            {
-                ReverseDuration = ReverseDuration - 1;
-            }
-            else
-            {
-                ReverseDuration = 0;
-                rotationSpeed = -rotationSpeed;
-                GetNode<Sprite>("Sprite").Texture = ResourceLoader.Load<Texture>(NormalSprite);
-            }
-        }
         RotationDegrees += rotationSpeed * controlConverter.speed.y * delta;
         Move(delta);
     }
@@ -116,12 +112,12 @@ public class Head : Node2D
         {
             ((Food)parent).CallDeferred(nameof(Food.Die));
         }
-        else if (parent is Bomb)
+        else if (parent is Bomb && !isInvincible)
         {
             ((Bomb)parent).CallDeferred(nameof(Bomb.Die));
             GetParent<Snake>().TakeDamage();
         }
-        else if (parent is Body)
+        else if (parent is Body && !isInvincible)
         {
             GetParent<Snake>().TakeDamage();
         }
@@ -157,5 +153,44 @@ public class Head : Node2D
                 RotationDegrees += (float)(Math.Sign(p1.y - p2.y) * tetaRadV * (180 / (float)Math.PI));
                 break;
         }
+    }
+
+    public void Reverse(bool reverse)
+    {
+        reversed = reverse;
+        if (reverse)
+        {
+            rotationSpeed = -Math.Abs(rotationSpeed);
+            reverseTimer.Start(10);
+        }
+        else
+        {
+            rotationSpeed = Math.Abs(rotationSpeed);
+            animationPlayer.Play("Idle");
+        }
+    }
+
+    private void onReverseTimerTimeout()
+    {
+        Reverse(false);
+    }
+
+    public void PlayAnimation(string animation)
+    {
+        if (reversed)
+        {
+            animation = "Reverse" + animation;
+        }
+        if (!animation.Contains("Idle"))
+        {
+            animatedSprite.Connect("animation_finished", this, nameof(onAnimatedSpriteAnimationFinished));
+        }
+        animatedSprite.Play(animation);
+    }
+
+    private void onAnimatedSpriteAnimationFinished()
+    {
+        animatedSprite.Disconnect("animation_finished", this, nameof(onAnimatedSpriteAnimationFinished));
+        PlayAnimation("Idle");
     }
 }
