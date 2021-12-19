@@ -47,11 +47,11 @@ public class Fauna : Node2D
         angle = 360 + (angle - 180) % 360;
         tween.InterpolateProperty(this, "position", pos, (tmp * 2).Rotated(((float)Math.PI) * angle / 180), 65);
         RotationDegrees = angle;
-        tween.Connect("tween_completed", this, nameof(onTweenCompleted));
+        tween.Connect("tween_all_completed", this, nameof(onTweenCompleted));
         tween.Start();
     }
 
-    private void onTweenCompleted()
+    public void onTweenCompleted()
     {
         QueueFree();
     }
