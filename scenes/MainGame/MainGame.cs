@@ -127,7 +127,7 @@ public class MainGame : Control
     {
         bool create = true;
 
-        if (rng.Randf() >= 0.15 && !(alt || reverse))
+        if (rng.Randf() >= 0.01 && !(alt || reverse))
         {
             CreateAltFood();
         }

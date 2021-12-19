@@ -7,7 +7,6 @@ public class Head : Node2D
     private Vector2 speed = new Vector2(0, -OriginalSpeed);
     private float ReverseDuration = 0;
     private float rotationSpeed = 300; //120
-    [Signal] public delegate void Reden();
     private ControlConverter controlConverter;
     private Body firstBody;
     private PackedScene queueScene = ResourceLoader.Load<PackedScene>("res://scenes/Snake/Body/Body.tscn");
@@ -18,6 +17,8 @@ public class Head : Node2D
     private AnimationPlayer animationPlayer;
     private bool isInvincible = false;
     private bool reversed = false;
+    [Signal] public delegate void Colored(string color);
+
     public float SnakeSpeed = OriginalSpeed;
     public const float SpeedRatio = 1f / 85f;
     public const float TransitionCount = 10;
@@ -38,6 +39,7 @@ public class Head : Node2D
         firstBody = queueScene.Instance<Body>();
         firstBody.Position = Position;
         firstBody.GetNode("Area2D").QueueFree();
+        Connect(nameof(Colored), firstBody, nameof(Body.onColored));
         GetParent().CallDeferred("add_child", firstBody);
         GetParent().CallDeferred("move_child", firstBody, 0);
         GetNode<Area2D>("Area2D").Connect("area_entered", this, nameof(onArea2DEntered));
@@ -58,7 +60,7 @@ public class Head : Node2D
                 Body newBody = queueScene.Instance<Body>();
                 if (alt)
                 {
-                    newBody.GetNode<Sprite>("Sprite").Visible = false;
+                    newBody.GetNode<AnimatedSprite>("AnimatedSprite").Visible = false;
                     newBody.GetNode<Sprite>("AltSprite").Visible = true;
                 }
                 newBody.Position = nextBody.Position;
@@ -66,6 +68,7 @@ public class Head : Node2D
                 GetParent().CallDeferred("add_child", newBody);
                 GetParent().CallDeferred("move_child", newBody, 0);
                 nextBody.NextBody = newBody;
+                nextBody.Connect("Colored",newBody,nameof(Body.onColored));
                 return;
             }
             else
@@ -87,11 +90,6 @@ public class Head : Node2D
         animationPlayer.Stop();
         Modulate = new Color("FFFFFF");
         isInvincible = false;
-    }
-
-    public void _OnReversedColor()
-    {
-
     }
 
     private void _on_Timer_timeout()
@@ -162,18 +160,22 @@ public class Head : Node2D
         {
             rotationSpeed = -Math.Abs(rotationSpeed);
             reverseTimer.Start(10);
+            EmitSignal(nameof(Colored), "Red");
         }
         else
         {
             rotationSpeed = Math.Abs(rotationSpeed);
-            animationPlayer.Play("Idle");
+            animatedSprite.Play("Idle");
         }
     }
 
     private void onReverseTimerTimeout()
     {
         Reverse(false);
+        EmitSignal(nameof(Colored), "Green");
     }
+
+
 
     public void PlayAnimation(string animation)
     {
