@@ -10,12 +10,13 @@ public class Bomb : Node2D
     {
         animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
         animatedSprite.Connect("animation_finished", this, nameof(enableHitbox));
-        GetNode("Area2D").SetProcess(false);
+        GetNode<CollisionShape2D>("Area2D/CollisionShape2D").Disabled = true;
         animatedSprite.Play("Apparition");
     }
 
     public void Die()
     {
+        GetNode<CollisionShape2D>("Area2D/CollisionShape2D").Disabled = true;
         if (!animatedSprite.IsConnected("animation_finished", this, nameof(OnDying)))
         {
             animatedSprite.Connect("animation_finished", this, nameof(OnDying));
@@ -31,7 +32,7 @@ public class Bomb : Node2D
 
     private void enableHitbox()
     {
-        GetNode("Area2D").SetProcess(true);
+        GetNode<CollisionShape2D>("Area2D/CollisionShape2D").Disabled = false;
         animatedSprite.Disconnect("animation_finished", this, nameof(enableHitbox));
     }
 }
