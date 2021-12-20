@@ -23,6 +23,10 @@ public class Head : Node2D
     public const float SpeedRatio = 1f / 85f;
     public const float TransitionCount = 10;
     public float TransitionTime = 1 / (OriginalSpeed * SpeedRatio); // TODO: Not forget to update this when changing snake speed.
+    public bool directionBlocked = false;
+    public Timer directionBlockedTimer;
+    private float _rotationDegrees;
+    private float BLOCKED_DURATION = 0.5f;
     public override void _Ready()
     {
         controlConverter = GetNode<ControlConverter>("/root/ControlConverter");
@@ -34,6 +38,8 @@ public class Head : Node2D
         invincibilityTimer.Connect("timeout", this, nameof(onInvincibilityTimerTimeout));
         reverseTimer = GetNode<Timer>("ReverseTimer");
         reverseTimer.Connect("timeout", this, nameof(onReverseTimerTimeout));
+        directionBlockedTimer = GetNode<Timer>("DirectionBlockedTimer");
+        directionBlockedTimer.Connect("timeout", this, nameof(onDirectionBlockedTimeout));
         animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
         animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
         firstBody = queueScene.Instance<Body>();
@@ -43,6 +49,7 @@ public class Head : Node2D
         GetParent().CallDeferred("add_child", firstBody);
         GetParent().CallDeferred("move_child", firstBody, 0);
         GetNode<Area2D>("Area2D").Connect("area_entered", this, nameof(onArea2DEntered));
+        _rotationDegrees = RotationDegrees;
     }
 
     public void Move(float delta)
@@ -68,7 +75,7 @@ public class Head : Node2D
                 GetParent().CallDeferred("add_child", newBody);
                 GetParent().CallDeferred("move_child", newBody, 0);
                 nextBody.NextBody = newBody;
-                nextBody.Connect("Colored",newBody,nameof(Body.onColored));
+                nextBody.Connect("Colored", newBody, nameof(Body.onColored));
                 return;
             }
             else
@@ -101,6 +108,10 @@ public class Head : Node2D
     {
         RotationDegrees += rotationSpeed * controlConverter.speed.y * delta;
         Move(delta);
+        if (directionBlocked)
+        {
+            RotationDegrees = _rotationDegrees;
+        }
     }
 
     private void onArea2DEntered(Area2D area)
@@ -126,6 +137,9 @@ public class Head : Node2D
         else if (area is Border)
         {
             BorderEffect(area);
+            directionBlocked = true;
+            _rotationDegrees = RotationDegrees;
+            directionBlockedTimer.Start(BLOCKED_DURATION);
         }
     }
 
@@ -151,6 +165,11 @@ public class Head : Node2D
                 RotationDegrees += (float)(Math.Sign(p1.y - p2.y) * tetaRadV * (180 / (float)Math.PI));
                 break;
         }
+    }
+
+    public void onDirectionBlockedTimeout()
+    {
+        directionBlocked = false;
     }
 
     public void Reverse(bool reverse)
