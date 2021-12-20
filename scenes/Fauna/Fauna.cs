@@ -32,7 +32,21 @@ public class Fauna : Node2D
     public void React() {
         if (Type == FaunaType.crab) {
             animatedSprite.Play("dive_crab");
+            animatedSprite.Connect("animation_finished",this,nameof(onCrabReset));
         }
+    }
+
+    public void onCrabReset()
+    {
+        animatedSprite.Disconnect("animation_finished",this,nameof(onCrabReset));
+        animatedSprite.Play("reset_dive_crab");
+        animatedSprite.Connect("animation_finished",this,nameof(onCrabIdle));
+    }
+
+    public void onCrabIdle()
+    {
+        animatedSprite.Disconnect("animation_finished",this,nameof(onCrabIdle));
+        animatedSprite.Play("idle_crab");
     }
 
     public void SetupFish()
