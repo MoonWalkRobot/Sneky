@@ -19,8 +19,8 @@ public class MainGame : Control
     private HealthBar healthBar;
     private Timer fishTimer;
     public int FoodLevel = 0;
-    public int HP = 5;
-    public const int FoodLevelUp = 3;
+    public int HP = 1;
+    public const int FoodLevelUp = 5;
     public int EatenFood = 0;
     public const int BombIncrease = 8;
 
@@ -128,7 +128,7 @@ public class MainGame : Control
     {
         bool create = true;
 
-        if (rng.Randf() >= 0.01 && !(alt || reverse))
+        if (rng.Randf() >= 0.9f && !(alt || reverse))
         {
             CreateAltFood();
         }
@@ -202,7 +202,6 @@ public class MainGame : Control
     {
         float rnd = rng.Randf();
         CreateFauna((rnd >= 0.5 ? Fauna.FaunaType.clownfish : Fauna.FaunaType.clapfish));
-        GD.Print("New Fish");
     }
 
     // LOCATION FINDER
