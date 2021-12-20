@@ -1,5 +1,5 @@
 # Sneky
-Snake reeducation game for the myocoach
+Snake reeducation game for the [MyoCoach](https://orthopus.com/en/myocoach/)
 
 # Installation
 
