@@ -41,6 +41,7 @@ public class MainGame : Control
             AddChild(ResourceLoader.Load<PackedScene>("res://scenes/Shader/Shader.tscn").Instance());
         }
         AddChild(snake);
+        snake.GetNode<Head>("Head").Connect(nameof(Head.BorderHit),this,nameof(TakeDamage));
         AddChild(fishes);
         snake.Position = new Vector2(400, 400);
         fishTimer = GetNode<Timer>("FishTimer");

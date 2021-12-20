@@ -27,6 +27,7 @@ public class Head : Node2D
     public Timer directionBlockedTimer;
     private float _rotationDegrees;
     private float BLOCKED_DURATION = 0.5f;
+    [Signal] public delegate void BorderHit();
     public override void _Ready()
     {
         controlConverter = GetNode<ControlConverter>("/root/ControlConverter");
@@ -137,14 +138,20 @@ public class Head : Node2D
         else if (area is Border)
         {
             BorderEffect(area);
-            directionBlocked = true;
-            _rotationDegrees = RotationDegrees;
-            directionBlockedTimer.Start(BLOCKED_DURATION);
+            BlockDirection();
         }
+    }
+
+    private void BlockDirection()
+    {
+        directionBlocked = true;
+        _rotationDegrees = RotationDegrees;
+        directionBlockedTimer.Start(BLOCKED_DURATION);
     }
 
     private void BorderEffect(Area2D area)
     {
+        EmitSignal(nameof(BorderHit));
         Vector2 p1 = Position;
         Vector2 p2 = Position + speed.Rotated(((float)Math.PI) * RotationDegrees / 180) * 10;
         float tetaRadV = 2 * (p1.x - p2.x) / (float)Math.Sqrt(Math.Pow(p1.x - p2.x, 2) + Math.Pow(p1.y - p2.y, 2));
